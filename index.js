@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { v4 as uuid } from "uuid";
+import { upload } from "./multer.js";
 
 const app = express();
 app.use(express.json())
@@ -20,6 +20,20 @@ app.use(function (_, res, next) {
 app.get("/", function (_, res) {
   res.status(200).json({
     message: "Hello World",
+  })
+})
+
+app.post("/upload", upload.single("file"), function (req, res) {
+  const file = req.file;
+  if (!file) {
+    res.status(400).json({
+      message: "No file uploaded",
+    })
+  }
+
+  res.status(200).json({
+    message: "File uploaded successfully",
+    file: file,
   })
 })
 
