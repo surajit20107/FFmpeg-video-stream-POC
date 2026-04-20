@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.replit
+.config
+.agents
+.cache
+uploads
