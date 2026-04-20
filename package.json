@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "server": "concurrently 'cd server && npm run dev' 'cd client && npm run dev'"
+    "dev": "concurrently 'cd server && npm run dev' 'cd client && npm run dev'"
   },
   "license": "ISC",
   "devDependencies": {
