@@ -1,15 +1,37 @@
-import { createPlayer } from '@videojs/react';
-import { VideoSkin, Video, videoFeatures } from '@videojs/react/video';
-import '@videojs/react/video/skin.css';
+import { useEffect, useRef } from "react";
+import Hls from "hls.js";
 
-const Player = createPlayer({ features: videoFeatures });
+const VIDEO_URL = "/uploads/9778e0e6-87b1-4aef-aa85-8a3e1d40fe96/index.m3u8"
 
 export function VideoPlayer() {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource(VIDEO_URL);
+      hls.attachMedia(video);
+
+      return () => {
+        hls.destroy();
+      }
+    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      video.src = VIDEO_URL;
+    }
+  }, [])
+  
   return (
-    <Player.Provider>
-      <VideoSkin poster="https://c8b42fd5-fcba-484a-8a86-42ab247fcc30-00-2fc4x24q6z1os.sisko.replit.dev/uploads/42f5f97f-32f9-4aff-a18b-ff4a878c5cec/index.m3u8">
-        <Video src="https://c8b42fd5-fcba-484a-8a86-42ab247fcc30-00-2fc4x24q6z1os.sisko.replit.dev/uploads/42f5f97f-32f9-4aff-a18b-ff4a878c5cec/index.m3u8" playsInline />
-      </VideoSkin>
-    </Player.Provider>
+    <video
+      ref={videoRef}
+      controls
+      // autoPlay
+      style={{
+        width: "100%",
+        maxWidth: "800px",
+      }}
+      />
   );
 }

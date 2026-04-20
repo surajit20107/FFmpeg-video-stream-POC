@@ -6,9 +6,10 @@
       "name": "client",
       "dependencies": {
         "@videojs/react": "^10.0.0-beta.22",
+        "hls.js": "^1.6.16",
         "react": "^19.2.4",
         "react-dom": "^19.2.4",
-        "video.js": "^8.23.7",
+        "video.js": "^8.12.0",
       },
       "devDependencies": {
         "@eslint/js": "^9.39.4",
