@@ -36,7 +36,7 @@ app.get("/", function (_, res) {
 app.post("/upload", upload.single("file"), function (req, res) {
   const file = req.file;
   if (!file) {
-    res.status(400).json({
+    return res.status(400).json({
       message: "No file uploaded",
     });
   }
@@ -47,22 +47,13 @@ app.post("/upload", upload.single("file"), function (req, res) {
   const hlsPath = `${outputPath}/index.m3u8`;
 
   console.log("hlsPath", hlsPath);
-
+  console.log("videoPath", videoPath)
   if (!fs.existsSync(outputPath)) {
     fs.mkdirSync(outputPath, { recursive: true });
   }
 
-  // ffmpeg command (the secret sauce)
-  // const ffmpegCommand = `ffmpeg -i ${videoPath} -codec:v libx264 -codec:a aac -hls_time 10 -hls_playlist_type vod -hls_segment_filename "${outputPath}/segment%03d.ts" -start_number 0 ${hlsPath}`;
-
-  const ffmpegCommand = `ffmpeg -y -loglevel error -i "${videoPath}" \
--c:v libx264 -c:a aac \
--vf scale=640:360 \
--hls_time 10 \
--hls_playlist_type vod \
--hls_segment_filename "${outputPath}/segment%03d.ts" \
--start_number 0 \
--f hls "${hlsPath}"`;
+  // ffmpeg command
+  const ffmpegCommand = `ffmpeg -i ${videoPath} -codec:v libx264 -codec:a aac -hls_time 10 -hls_playlist_type vod -hls_segment_filename "${outputPath}/segment%03d.ts" -start_number 0 ${hlsPath}`;
 
   // no queue because of POC, not to be used in production
   exec(ffmpegCommand, (error, stdout, stderr) => {
@@ -71,9 +62,10 @@ app.post("/upload", upload.single("file"), function (req, res) {
     }
     console.log(`stdout: ${stdout}`);
     console.log(`stderr: ${stderr}`);
-    // const videoUrl = `http://localhost:3000/uploads/${lessonId}/index.m3u8`;
-    const videoUrl = `https://c8b42fd5-fcba-484a-8a86-42ab247fcc30-00-2fc4x24q6z1os.sisko.replit.dev/uploads/${lessonId}/index.m3u8`;
+    const videoUrl = `http://localhost:3000/uploads/${lessonId}/index.m3u8`;
 
+    // remove the file from the server
+    fs.unlinkSync(videoPath);
     res.status(200).json({
       message: "Video converted to HLS format",
       videoUrl: videoUrl,

@@ -1,12 +1,11 @@
-import { VideoPlayer } from './VideoPlayer.jsx'
+import { VideoPlayer } from './VideoPlayer.jsx';
 
 function App() {
   return (
-    <>
-      <div>Hello world</div>
+    <div>
       <VideoPlayer />
-    </>
+    </div>
   )
 }
 
-export default App
+export default App;
